@@ -6,6 +6,9 @@
     <title>DigitalForge</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Unbounded:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+
 </head>
 <body>
     <!-- Navbar Principal -->
@@ -180,6 +183,38 @@
             </div>
         </div>
     </div>
+    
+
+   <footer class="footer-custom fixed-bottom mt-5 py-4 text-white">
+    <div class="container">
+        <div class="row align-items-start">
+
+            <!-- COLUMNA 1 -->
+            <div class="col-md-6 mb-3">
+                <h4 class="fw-bold titulo-logo text-white">DigitalForge</h4>
+                <p class="footer-text">
+                    Tu tienda digital confiable.  
+                    Productos seleccionados y precios accesibles.
+                </p>
+            </div>
+
+            <!-- COLUMNA 2 -->
+            <div class="col-md-6 mb-3 text-md-end">
+                <h5 class="fw-bold">Síguenos</h5>
+                <a href="#" class="footer-social"><i class="bi bi-facebook"></i></a>
+                <a href="#" class="footer-social"><i class="bi bi-instagram"></i></a>
+                <a href="#" class="footer-social"><i class="bi bi-whatsapp"></i></a>
+            </div>
+
+        </div>
+
+        <hr class="footer-divider">
+
+        <div class="text-center small py-4">
+            © 2025 DigitalForge — Todos los derechos reservados.
+        </div>
+    </div>
+</footer>
 
     <!-- Bootstrap JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
