@@ -1,0 +1,46 @@
+# Configuración del sistema
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
+error_log
+
+# Entorno
+.env
+.env.local
+.env.production
+.env.development
+
+# Dependencias
+vendor/
+node_modules/
+composer.lock
+package-lock.json
+yarn.lock
+
+# IDE
+.idea/
+.vscode/
+*.code-workspace
+
+# Archivos de sistema
+.htaccess
+php.ini
+
+# Uploads
+public/uploads/
+!public/uploads/.gitkeep
+
+# Backup de base de datos
+*.sql
+*.bak
+
+# Cache
+.cache/
+
+# Sesiones PHP
+sess_*
