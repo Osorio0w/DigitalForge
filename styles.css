@@ -115,3 +115,14 @@ h1, h2, h3, h4, h5 {
     border-color: rgba(255,255,255,0.3);
     margin-top: 10px;
 }
+
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+footer {
+    margin-top: auto;
+}
