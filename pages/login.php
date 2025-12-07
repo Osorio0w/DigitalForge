@@ -1,6 +1,8 @@
 <?php
-require_once '../includes/header.php';
+// PRIMERO: Cargar funciones y session ANTES del header
 require_once '../includes/functions.php';
+session_start();
+require_once '../config/database.php';
 
 // Si ya está logueado, redirigir al inicio
 if (isLoggedIn()) {
@@ -27,7 +29,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // Si no hay errores, intentar login
     if (empty($errors)) {
-        require_once '../config/database.php';
         $conn = getConnection();
         
         // Buscar usuario
@@ -65,6 +66,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         saveOldData(['email' => $email]);
     }
 }
+
+// AHORA SÍ: Incluir el header (después de procesar)
+require_once '../includes/header.php';
 ?>
 
 <div class="container py-5">
@@ -72,7 +76,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="col-md-6 col-lg-5">
             <div class="card border-0 shadow-sm">
                 <div class="card-body p-5">
-                    <!-- Logo -->
                     <div class="text-center mb-4">
                         <div class="mb-3">
                             <i class="fas fa-code-branch fa-3x" style="color: var(--primary-color);"></i>
@@ -81,14 +84,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <p class="text-muted">Accede a tu cuenta de DigitalForge</p>
                     </div>
                     
-                    <!-- Mostrar errores generales -->
                     <?php if (isset($errors['general'])): ?>
                         <div class="alert alert-danger"><?php echo $errors['general']; ?></div>
                     <?php endif; ?>
                     
-                    <!-- Formulario -->
                     <form method="POST" action="">
-                        <!-- Email -->
                         <div class="mb-4">
                             <label for="email" class="form-label fw-semibold">Correo Electrónico</label>
                             <div class="input-group">
@@ -108,7 +108,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                         </div>
                         
-                        <!-- Contraseña -->
                         <div class="mb-4">
                             <label for="password" class="form-label fw-semibold">Contraseña</label>
                             <div class="input-group">
@@ -130,7 +129,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                         </div>
                         
-                        <!-- Recordarme y olvidé contraseña -->
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="remember" name="remember">
@@ -141,14 +139,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </a>
                         </div>
                         
-                        <!-- Botón de envío -->
                         <div class="d-grid mb-4">
                             <button type="submit" class="btn btn-primary btn-lg fw-semibold">
                                 <i class="fas fa-sign-in-alt me-2"></i>Iniciar Sesión
                             </button>
                         </div>
                         
-                        <!-- Enlace a registro -->
                         <div class="text-center">
                             <p class="text-muted mb-0">¿No tienes una cuenta?</p>
                             <a href="register.php" class="fw-semibold text-decoration-none" style="color: var(--primary-color);">
@@ -163,24 +159,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 
 <script>
-    // Mostrar/ocultar contraseña
-    document.getElementById('togglePassword').addEventListener('click', function() {
-        const passwordInput = document.getElementById('password');
-        const icon = this.querySelector('i');
-        
-        if (passwordInput.type === 'password') {
-            passwordInput.type = 'text';
-            icon.classList.remove('fa-eye');
-            icon.classList.add('fa-eye-slash');
-        } else {
-            passwordInput.type = 'password';
-            icon.classList.remove('fa-eye-slash');
-            icon.classList.add('fa-eye');
-        }
-    });
-    
-    // Auto-focus en el primer campo
-    document.getElementById('email').focus();
+document.getElementById('togglePassword').addEventListener('click', function() {
+    const passwordInput = document.getElementById('password');
+    const icon = this.querySelector('i');
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        passwordInput.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+});
+
+document.getElementById('email').focus();
 </script>
 
 <?php 

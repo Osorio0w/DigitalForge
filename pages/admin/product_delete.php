@@ -11,9 +11,15 @@ if (!is_admin()) {
 
 $conn = getConnection();
 
-$id = $_GET['id'] ?? 0;
+$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
-// Obtener producto para eliminar imagen
+if ($id <= 0) {
+    $_SESSION['error'] = "ID inválido.";
+    header("Location: products.php");
+    exit;
+}
+
+// Obtener imagen
 $stmt = $conn->prepare("SELECT imagen FROM productos WHERE id = :id");
 $stmt->execute(['id' => $id]);
 $producto = $stmt->fetch();
@@ -22,11 +28,11 @@ if ($producto) {
     $imagen = $producto['imagen'];
     $folder = "../../public/images/";
 
-    if ($imagen && file_exists($folder . $imagen)) {
+    if ($imagen && $imagen !== "noimage.png" && file_exists($folder . $imagen)) {
         unlink($folder . $imagen);
     }
 
-    // Eliminar de BD
+    // Eliminar BD
     $del = $conn->prepare("DELETE FROM productos WHERE id = :id");
     $del->execute(['id' => $id]);
 

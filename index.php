@@ -17,71 +17,73 @@ require_once 'includes/header.php';
 
 <body class="d-flex flex-column min-vh-100">
 
-    <!-- NAVBAR VIENE DE includes/header.php -->
+    <section class="hero-section text-center text-white d-flex align-items-center">
+        <div class="container">
+            <h1 class="fw-bold mb-3 hero-title">Construye tu presencia digital</h1>
+            <p class="lead hero-subtitle mb-4">
+                Diseño, tecnología y creatividad — todo lo que tu negocio necesita para crecer online.
+            </p>
+            <a href="#productos" class="btn btn-light btn-lg fw-bold px-4 py-2">
+                <i class="bi bi-arrow-right-circle me-1"></i> Ver Productos
+            </a>
+        </div>
+    </section>
 
-    <!-- Contenido Principal -->
-    <div class="container mt-4 flex-grow-1">
 
-        <!-- Ejemplo de productos -->
-        <h2>Productos Destacados</h2>
+    <!-- PRODUCTOS DESTACADOS -->
+    <div class="container mt-5 flex-grow-1" id="productos">
 
-        <div class="row mt-3">
+        <h2 class="fw-bold mb-4" style="color: var(--color-primary);">Productos Destacados</h2>
 
-            <div class="col-md-3 mb-4">
-                <div class="card">
-                    <img src="public/images/productos/gato4.jpeg" class="card-img-top" alt="Producto">
-                    <div class="card-body">
-                        <h5 class="card-title">Producto 1</h5>
-                        <p class="card-text">$99.00</p>
-                        <button class="btn btn-primary btn-sm">
-                            <i class="bi bi-cart-plus"></i> Agregar
-                        </button>
+        <?php
+            require_once 'config/database.php';
+            $conn = getConnection();
+
+            // Obtener productos reales
+            $stmt = $conn->prepare("SELECT * FROM productos ORDER BY id DESC LIMIT 12");
+            $stmt->execute();
+            $productos = $stmt->fetchAll();
+        ?>
+
+        <div class="row">
+
+            <?php if (count($productos) == 0): ?>
+
+                <p class="text-center text-muted">No hay productos todavía.</p>
+
+            <?php else: ?>
+
+                <?php foreach ($productos as $p): ?>
+                    <div class="col-md-3 mb-4">
+                        <div class="card product-card shadow-sm border-0">
+
+                            <img src="public/images/productos/<?php echo $p['imagen']; ?>" 
+                                 class="card-img-top" 
+                                 alt="<?php echo htmlspecialchars($p['nombre_producto']); ?>">
+
+                            <div class="card-body text-center">
+                                <h5 class="card-title fw-bold">
+                                    <?php echo htmlspecialchars($p['nombre_producto']); ?>
+                                </h5>
+
+                                <p class="card-text text-success fw-semibold">
+                                    $<?php echo number_format($p['precio'], 2); ?>
+                                </p>
+
+                                <button class="btn btn-primary btn-sm">
+                                    <i class="bi bi-cart-plus"></i> Agregar
+                                </button>
+                            </div>
+
+                        </div>
                     </div>
-                </div>
-            </div>
+                <?php endforeach; ?>
 
-            <div class="col-md-3 mb-4">
-                <div class="card">
-                    <img src="public/images/productos/gato3.jpeg" class="card-img-top" alt="Producto">
-                    <div class="card-body">
-                        <h5 class="card-title">Producto 2</h5>
-                        <p class="card-text">$100.00</p>
-                        <button class="btn btn-primary btn-sm">
-                            <i class="bi bi-cart-plus"></i> Agregar
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-3 mb-4">
-                <div class="card">
-                    <img src="public/images/productos/gato2.jpg" class="card-img-top" alt="Producto">
-                    <div class="card-body">
-                        <h5 class="card-title">Producto 3</h5>
-                        <p class="card-text">$100.00</p>
-                        <button class="btn btn-primary btn-sm">
-                            <i class="bi bi-cart-plus"></i> Agregar
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-3 mb-4">
-                <div class="card">
-                    <img src="public/images/productos/gato1.jpeg" class="card-img-top" alt="Producto">
-                    <div class="card-body">
-                        <h5 class="card-title">Producto 4</h5>
-                        <p class="card-text">$100.00</p>
-                        <button class="btn btn-primary btn-sm">
-                            <i class="bi bi-cart-plus"></i> Agregar
-                        </button>
-                    </div>
-                </div>
-            </div>
-
+            <?php endif; ?>
         </div>
     </div>
 
+    
     <!-- FOOTER -->
     <footer class="footer-custom mt-5 py-4 text-white">
         <div class="container">
@@ -112,10 +114,4 @@ require_once 'includes/header.php';
                 © 2025 DigitalForge — Todos los derechos reservados.
             </div>
         </div>
-    </footer>
-
-    <!-- Bootstrap JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-</body>
-</html>
+    </foot

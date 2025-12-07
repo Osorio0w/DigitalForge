@@ -11,9 +11,15 @@ if (!is_admin()) {
 
 $conn = getConnection();
 
-$id = $_GET['id'] ?? 0;
+$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
-// Obtener datos del producto actual
+if ($id <= 0) {
+    $_SESSION['error'] = "ID inválido.";
+    header("Location: products.php");
+    exit;
+}
+
+// Obtener datos
 $stmt = $conn->prepare("SELECT * FROM productos WHERE id = :id LIMIT 1");
 $stmt->execute(['id' => $id]);
 $producto = $stmt->fetch();
@@ -30,33 +36,39 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $nombre = trim($_POST['nombre']);
     $precio = trim($_POST['precio']);
 
-    $imagen = $producto['imagen']; // por defecto, la misma
+    $imagen = $producto['imagen'];
+    $folder = "../../public/images/";
 
     if (!empty($_FILES['imagen']['name'])) {
-        $archivo = $_FILES['imagen']['name'];
-        $tmp = $_FILES['imagen']['tmp_name'];
-        $folder = "../../public/images/";
+
+        // Validar extensión
+        $ext = strtolower(pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION));
+        $permitidas = ['jpg','jpeg','png'];
+
+        if (!in_array($ext, $permitidas)) {
+            $_SESSION['error'] = "Formato de imagen no válido.";
+            header("Location: product_edit.php?id=".$id);
+            exit;
+        }
 
         // Eliminar imagen anterior
-        if ($imagen && file_exists($folder . $imagen)) {
+        if ($imagen && $imagen !== "noimage.png" && file_exists($folder . $imagen)) {
             unlink($folder . $imagen);
         }
 
-        $ext = strtolower(pathinfo($archivo, PATHINFO_EXTENSION));
         $nuevoNombre = uniqid("img_") . "." . $ext;
-
-        move_uploaded_file($tmp, $folder . $nuevoNombre);
+        move_uploaded_file($_FILES['imagen']['tmp_name'], $folder . $nuevoNombre);
         $imagen = $nuevoNombre;
     }
 
     // Actualizar BD
     $stmt = $conn->prepare("
         UPDATE productos 
-        SET nombre = :n, precio = :p, imagen = :i 
+        SET nombre_producto = :n, precio = :p, imagen = :i 
         WHERE id = :id
     ");
     $stmt->execute([
-        'n' => $nombre,
+        'n' => $nombre_producto,
         'p' => $precio,
         'i' => $imagen,
         'id' => $id
@@ -81,7 +93,7 @@ include '../../includes/header.php';
                 <div class="mb-3">
                     <label class="form-label fw-bold">Nombre del Producto</label>
                     <input type="text" name="nombre" class="form-control"
-                           value="<?php echo htmlspecialchars($producto['nombre']); ?>" required>
+                           value="<?php echo htmlspecialchars($producto['nombre_producto']); ?>" required>
                 </div>
 
                 <div class="mb-3">

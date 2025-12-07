@@ -1,119 +1,149 @@
+/* ================================
+   PALETA DE COLORES
+=================================*/
 :root {
     --color-primary: #3b56a8;
     --color-secondary: #aac9bb;
-    --color-dark: #3c3c3c;
-    --color-light: #d9e8ed;
+    --color-dark: #2f2f2f;
+    --color-light: #f4f7fb;
+    --color-text: #3c3c3c;
+    --radius: 14px;
 }
 
+/* ================================
+   RESET – más moderno
+=================================*/
 body {
     background-color: var(--color-light);
-    color: var(--color-dark);  
-    
+    color: var(--color-text);
+    font-family: 'Montserrat', sans-serif;
+    overflow-x: hidden;
 }
 
-/*  NAVBAR */
-
+/* ================================
+   NAVBAR
+=================================*/
 .navbar {
     background-color: var(--color-primary) !important;
+    padding: 0.8rem 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.12);
 }
 
 .navbar .nav-link,
 .navbar .navbar-brand {
     color: white !important;
+    font-weight: 500;
 }
 
+/* ================================
+   HERO SECTION (NUEVA)
+=================================*/
+.hero-section {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    color: white;
+    padding: 80px 0;
+    border-radius: 0 0 40px 40px;
+    margin-bottom: 40px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
 
-/*  BOTONES */
+.hero-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 15px;
+}
 
+.hero-subtitle {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    margin-bottom: 25px;
+}
 
-/* Botón principal */
+.hero-btn {
+    background: white;
+    color: var(--color-primary);
+    padding: 12px 24px;
+    font-size: 1.1rem;
+    border-radius: var(--radius);
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.hero-btn:hover {
+    background: var(--color-secondary);
+    color: var(--color-dark);
+    transform: translateY(-2px);
+}
+
+/* ================================
+   TARJETAS DE PRODUCTOS
+=================================*/
+.card {
+    border: none;
+    border-radius: var(--radius);
+    background-color: white;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease, box-shadow .3s;
+}
+
+.card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.18);
+}
+
+.card img {
+    border-radius: var(--radius) var(--radius) 0 0;
+}
+
+.card-title {
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+.card-text {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--color-dark);
+}
+
+/* Botón agregar */
 .btn-primary {
     background-color: var(--color-primary) !important;
     border-color: var(--color-primary) !important;
-    color: white !important;
+    border-radius: var(--radius);
+    transition: all .2s;
 }
 
 .btn-primary:hover {
     background-color: #2f4589 !important;
-    border-color: #2f4589 !important;
+    transform: scale(1.04);
 }
-
-/* Botón secundario */
-.btn-secondary {
-    background-color: var(--color-secondary);
-    color: var(--color-dark);
-    border: none !important;
-}
-
-.btn-secondary:hover {
-    background-color: #90b2a2; /* un poco más oscuro */
-    color: var(--color-dark);
-}
-
-
-/*  TARJETAS DE PRODUCTOS */
-
-
-.card {
-    border: 1px solid #cbd9df;  
-    background-color: white;
-}
-
-.card-title {
-    color: var(--color-dark);
-}
-
-
-/*  TÍTULOS */
-
-
-h1, h2, h3, h4, h5 {
-    color: var(--color-primary);
-    font-family: 'Archivo Black', sans-serif;
-}
-
-
-/*  BUSCADOR */
-
-
-.form-control {
-    border-color: var(--color-primary);
-}
-
-.form-control:focus {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 0.25rem rgba(59, 86, 168, 0.25);
-}
-
 
 /* FOOTER */
 .footer-custom {
     background-color: var(--color-primary);
-    position: relative;
-    bottom: 0;
     width: 100%;
-}
-
-.footer-text {
-    font-size: 1.05rem;
-    line-height: 1.6;
-    opacity: 0.9;
+    color: white;
+    margin-top: 70px;
+    padding-top: 40px;
+    border-radius: 40px 40px 0 0;
 }
 
 .footer-social {
-    font-size: 1.7rem;
+    font-size: 1.8rem;
     color: white;
-    margin-left: 10px;
-    transition: opacity .2s;
+    margin-left: 12px;
+    transition: 0.2s ease;
 }
 
 .footer-social:hover {
-    opacity: .7;
+    opacity: 0.7;
+    transform: translateY(-2px);
 }
 
 .footer-divider {
-    border-color: rgba(255,255,255,0.3);
-    margin-top: 10px;
+    border-color: rgba(255,255,255,0.35);
+    margin-top: 20px;
 }
 
 
@@ -125,4 +155,55 @@ body {
 
 footer {
     margin-top: auto;
+}
+
+
+/* =======================
+      HERO SECTION
+========================= */
+
+.hero-section {
+    background: linear-gradient(135deg, var(--color-primary), #2e3f85);
+    height: 55vh;
+    display: flex;
+    justify-content: center;
+    border-bottom-left-radius: 40px;
+    border-bottom-right-radius: 40px;
+    padding: 20px;
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-family: 'Unbounded', sans-serif;
+}
+
+.hero-subtitle {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+/* =======================
+      PRODUCT CARD
+========================= */
+
+.product-card {
+    border-radius: 12px;
+    overflow: hidden;
+    background: white;
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 22px rgba(0,0,0,0.15);
+}
+
+.product-card img {
+    height: 180px;
+    object-fit: cover;
+}
+
+/* Asegura consistencia con tu paleta */
+.card-title {
+    color: var(--color-dark);
 }

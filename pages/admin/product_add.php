@@ -13,26 +13,31 @@ $conn = getConnection();
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
-    $nombre = trim($_POST['nombre']);
+    $nombre = trim($_POST['nombre_producto']);
     $precio = trim($_POST['precio']);
 
-    // Manejo de imagen
     $imagen = null;
+    $folder = "../../public/images/";
 
     if (!empty($_FILES['imagen']['name'])) {
-        $archivo = $_FILES['imagen']['name'];
-        $tmp = $_FILES['imagen']['tmp_name'];
-        $folder = "../../public/images/";
 
-        $ext = strtolower(pathinfo($archivo, PATHINFO_EXTENSION));
+        // Validar extensión
+        $ext = strtolower(pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION));
+        $permitidas = ['jpg','jpeg','png'];
+
+        if (!in_array($ext, $permitidas)) {
+            $_SESSION['error'] = "Formato de imagen no válido.";
+            header("Location: product_add.php");
+            exit;
+        }
+
         $nuevoNombre = uniqid("img_") . "." . $ext;
-
-        move_uploaded_file($tmp, $folder . $nuevoNombre);
+        move_uploaded_file($_FILES['imagen']['tmp_name'], $folder . $nuevoNombre);
         $imagen = $nuevoNombre;
     }
 
-    // Insertar en BD
-    $stmt = $conn->prepare("INSERT INTO productos (nombre, precio, imagen) VALUES (:n, :p, :i)");
+    // Insert en BD
+    $stmt = $conn->prepare("INSERT INTO productos (nombre_producto, precio, imagen) VALUES (:n, :p, :i)");
     $stmt->execute([
         'n' => $nombre,
         'p' => $precio,
@@ -56,7 +61,7 @@ include '../../includes/header.php';
 
                 <div class="mb-3">
                     <label class="form-label fw-bold">Nombre del Producto</label>
-                    <input type="text" name="nombre" class="form-control" required>
+                    <input type="text" name="nombre_producto" class="form-control" required>
                 </div>
 
                 <div class="mb-3">

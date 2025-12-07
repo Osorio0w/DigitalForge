@@ -1,6 +1,8 @@
 <?php
-require_once '../includes/header.php';
+// PRIMERO: Cargar funciones y session ANTES del header
 require_once '../includes/functions.php';
+session_start();
+require_once '../config/database.php';
 
 // Si ya está logueado, redirigir al inicio
 if (isLoggedIn()) {
@@ -61,7 +63,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // Si no hay errores, registrar usuario
     if (empty($errors)) {
-        require_once '../config/database.php';
         $conn = getConnection();
         
         // Verificar si el email ya existe
@@ -76,8 +77,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             // Insertar usuario
             $stmt = $conn->prepare("
-                INSERT INTO usuarios (nombre, apellido, correo, password, telefono, fecha_registro)
-                VALUES (:nombre, :apellido, :correo, :password, :telefono, NOW())
+                INSERT INTO usuarios (nombre, apellido, correo, password, telefono, rol, es_admin, activo, fecha_registro)
+                VALUES (:nombre, :apellido, :correo, :password, :telefono, 'usuario', 0, 1, NOW())
             ");
             
             $success = $stmt->execute([
@@ -112,6 +113,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         saveOldData($_POST);
     }
 }
+
+// AHORA SÍ: Incluir el header (después de procesar)
+require_once '../includes/header.php';
 ?>
 
 <div class="container py-5">
@@ -119,7 +123,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="col-md-8 col-lg-7">
             <div class="card border-0 shadow-sm">
                 <div class="card-body p-5">
-                    <!-- Logo y título -->
                     <div class="text-center mb-4">
                         <div class="mb-3">
                             <i class="fas fa-user-plus fa-3x" style="color: var(--primary-color);"></i>
@@ -128,15 +131,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <p class="text-muted">Regístrate para acceder a todos nuestros servicios</p>
                     </div>
                     
-                    <!-- Mostrar errores generales -->
                     <?php if (isset($errors['general'])): ?>
                         <div class="alert alert-danger"><?php echo $errors['general']; ?></div>
                     <?php endif; ?>
                     
-                    <!-- Formulario -->
                     <form method="POST" action="">
                         <div class="row">
-                            <!-- Nombre -->
                             <div class="col-md-6 mb-4">
                                 <label for="nombre" class="form-label fw-semibold">Nombre *</label>
                                 <div class="input-group">
@@ -156,7 +156,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 </div>
                             </div>
                             
-                            <!-- Apellido -->
                             <div class="col-md-6 mb-4">
                                 <label for="apellido" class="form-label fw-semibold">Apellido *</label>
                                 <div class="input-group">
@@ -177,7 +176,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                         </div>
                         
-                        <!-- Email -->
                         <div class="mb-4">
                             <label for="email" class="form-label fw-semibold">Correo Electrónico *</label>
                             <div class="input-group">
@@ -197,7 +195,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                         </div>
                         
-                        <!-- Teléfono (opcional) -->
                         <div class="mb-4">
                             <label for="telefono" class="form-label fw-semibold">Teléfono <span class="text-muted">(Opcional)</span></label>
                             <div class="input-group">
@@ -212,9 +209,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                        placeholder="+58 412 123 4567">
                             </div>
                         </div>
-                        
+                                                
                         <div class="row">
-                            <!-- Contraseña -->
                             <div class="col-md-6 mb-4">
                                 <label for="password" class="form-label fw-semibold">Contraseña *</label>
                                 <div class="input-group">
@@ -237,7 +233,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <small class="text-muted">Debe incluir letras y números</small>
                             </div>
                             
-                            <!-- Confirmar Contraseña -->
                             <div class="col-md-6 mb-4">
                                 <label for="confirm_password" class="form-label fw-semibold">Confirmar Contraseña *</label>
                                 <div class="input-group">
@@ -260,27 +255,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                         </div>
                         
-                        <!-- Términos y condiciones -->
                         <div class="mb-4">
-                            <div class="form-check <?php echo isset($errors['acepto_terminos']) ? 'is-invalid' : ''; ?>">
-                                <input class="form-check-input" type="checkbox" id="acepto_terminos" name="acepto_terminos" <?php echo old('acepto_terminos') ? 'checked' : ''; ?>>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="acepto_terminos" name="acepto_terminos">
                                 <label class="form-check-label" for="acepto_terminos">
-                                    Acepto los <a href="#" class="text-decoration-none" style="color: var(--primary-color);">términos y condiciones</a> y la <a href="#" class="text-decoration-none" style="color: var(--primary-color);">política de privacidad</a> *
+                                    Acepto los <a href="#" class="text-decoration-none" style="color: var(--primary-color);">términos y condiciones</a> *
                                 </label>
                                 <?php if (isset($errors['acepto_terminos'])): ?>
-                                    <div class="invalid-feedback d-block"><?php echo $errors['acepto_terminos']; ?></div>
+                                    <div class="text-danger small"><?php echo $errors['acepto_terminos']; ?></div>
                                 <?php endif; ?>
                             </div>
                         </div>
                         
-                        <!-- Botón de envío -->
                         <div class="d-grid mb-4">
                             <button type="submit" class="btn btn-primary btn-lg fw-semibold">
                                 <i class="fas fa-user-plus me-2"></i>Crear Cuenta
                             </button>
                         </div>
                         
-                        <!-- Enlace a login -->
                         <div class="text-center">
                             <p class="text-muted mb-0">¿Ya tienes una cuenta?</p>
                             <a href="login.php" class="fw-semibold text-decoration-none" style="color: var(--primary-color);">
@@ -295,52 +287,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 
 <script>
-    // Mostrar/ocultar contraseña
-    document.getElementById('togglePassword').addEventListener('click', function() {
-        const passwordInput = document.getElementById('password');
-        const icon = this.querySelector('i');
-        
-        if (passwordInput.type === 'password') {
-            passwordInput.type = 'text';
-            icon.classList.remove('fa-eye');
-            icon.classList.add('fa-eye-slash');
-        } else {
-            passwordInput.type = 'password';
-            icon.classList.remove('fa-eye-slash');
-            icon.classList.add('fa-eye');
-        }
-    });
-    
-    // Mostrar/ocultar confirmación de contraseña
-    document.getElementById('toggleConfirmPassword').addEventListener('click', function() {
-        const confirmInput = document.getElementById('confirm_password');
-        const icon = this.querySelector('i');
-        
-        if (confirmInput.type === 'password') {
-            confirmInput.type = 'text';
-            icon.classList.remove('fa-eye');
-            icon.classList.add('fa-eye-slash');
-        } else {
-            confirmInput.type = 'password';
-            icon.classList.remove('fa-eye-slash');
-            icon.classList.add('fa-eye');
-        }
-    });
-    
-    // Validar contraseña en tiempo real
-    document.getElementById('password').addEventListener('input', function() {
-        const password = this.value;
-        const feedback = this.nextElementSibling?.nextElementSibling;
-        
-        if (password.length > 0 && password.length < 8) {
-            if (feedback) feedback.textContent = 'La contraseña debe tener al menos 8 caracteres';
-        } else if (!/(?=.*[A-Za-z])(?=.*\d)/.test(password) && password.length >= 8) {
-            if (feedback) feedback.textContent = 'Debe incluir letras y números';
-        }
-    });
-    
-    // Auto-focus en el primer campo
-    document.getElementById('nombre').focus();
+document.getElementById('togglePassword').addEventListener('click', function() {
+    const passwordInput = document.getElementById('password');
+    const icon = this.querySelector('i');
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        passwordInput.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+});
+
+document.getElementById('toggleConfirmPassword').addEventListener('click', function() {
+    const confirmInput = document.getElementById('confirm_password');
+    const icon = this.querySelector('i');
+    if (confirmInput.type === 'password') {
+        confirmInput.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        confirmInput.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+});
+
+document.getElementById('nombre').focus();
 </script>
 
 <?php 
