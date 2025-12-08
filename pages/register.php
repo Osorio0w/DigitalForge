@@ -1,7 +1,6 @@
 <?php
 // PRIMERO: Cargar funciones y session ANTES del header
 require_once '../includes/functions.php';
-session_start();
 require_once '../config/database.php';
 
 // Si ya está logueado, redirigir al inicio

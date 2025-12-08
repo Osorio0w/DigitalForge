@@ -2,116 +2,71 @@
 require_once 'includes/header.php'; 
 ?>
 
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DigitalForge</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Unbounded:wght@500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-</head>
-
-<body class="d-flex flex-column min-vh-100">
-
-    <section class="hero-section text-center text-white d-flex align-items-center">
-        <div class="container">
-            <h1 class="fw-bold mb-3 hero-title">Construye tu presencia digital</h1>
-            <p class="lead hero-subtitle mb-4">
-                Diseño, tecnología y creatividad — todo lo que tu negocio necesita para crecer online.
-            </p>
-            <a href="#productos" class="btn btn-light btn-lg fw-bold px-4 py-2">
-                <i class="bi bi-arrow-right-circle me-1"></i> Ver Productos
-            </a>
-        </div>
-    </section>
-
-
-    <!-- PRODUCTOS DESTACADOS -->
-    <div class="container mt-5 flex-grow-1" id="productos">
-
-        <h2 class="fw-bold mb-4" style="color: var(--color-primary);">Productos Destacados</h2>
-
-        <?php
-            require_once 'config/database.php';
-            $conn = getConnection();
-
-            // Obtener productos reales
-            $stmt = $conn->prepare("SELECT * FROM productos ORDER BY id DESC LIMIT 12");
-            $stmt->execute();
-            $productos = $stmt->fetchAll();
-        ?>
-
-        <div class="row">
-
-            <?php if (count($productos) == 0): ?>
-
-                <p class="text-center text-muted">No hay productos todavía.</p>
-
-            <?php else: ?>
-
-                <?php foreach ($productos as $p): ?>
-                    <div class="col-md-3 mb-4">
-                        <div class="card product-card shadow-sm border-0">
-
-                            <img src="public/images/productos/<?php echo $p['imagen']; ?>" 
-                                 class="card-img-top" 
-                                 alt="<?php echo htmlspecialchars($p['nombre_producto']); ?>">
-
-                            <div class="card-body text-center">
-                                <h5 class="card-title fw-bold">
-                                    <?php echo htmlspecialchars($p['nombre_producto']); ?>
-                                </h5>
-
-                                <p class="card-text text-success fw-semibold">
-                                    $<?php echo number_format($p['precio'], 2); ?>
-                                </p>
-
-                                <button class="btn btn-primary btn-sm">
-                                    <i class="bi bi-cart-plus"></i> Agregar
-                                </button>
-                            </div>
-
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-
-            <?php endif; ?>
-        </div>
+<!-- Contenido principal de la página -->
+<section class="hero-section text-center text-white d-flex align-items-center">
+    <div class="container">
+        <h1 class="fw-bold mb-3 hero-title">Construye tu presencia digital</h1>
+        <p class="lead hero-subtitle mb-4">
+            Diseño, tecnología y creatividad — todo lo que tu negocio necesita para crecer online.
+        </p>
+        <a href="#productos" class="btn btn-light btn-lg fw-bold px-4 py-2">
+            <i class="bi bi-arrow-right-circle me-1"></i> Ver Productos
+        </a>
     </div>
+</section>
 
-    
-    <!-- FOOTER -->
-    <footer class="footer-custom mt-5 py-4 text-white">
-        <div class="container">
-            <div class="row align-items-start">
+<div class="container mt-5 flex-grow-1" id="productos">
 
-                <!-- COLUMNA 1 -->
-                <div class="col-md-6 mb-3">
-                    <h4 class="fw-bold titulo-logo text-white">DigitalForge</h4>
-                    <p class="footer-text">
-                        Tu tienda digital confiable.  
-                        Productos seleccionados y precios accesibles.
-                    </p>
+    <h2 class="fw-bold mb-4" style="color: var(--color-primary);">Productos Destacados</h2>
+
+    <?php
+        require_once 'config/database.php';
+        $conn = getConnection();
+
+        // Obtener productos reales
+        $stmt = $conn->prepare("SELECT * FROM productos ORDER BY id DESC LIMIT 12");
+        $stmt->execute();
+        $productos = $stmt->fetchAll();
+    ?>
+
+    <div class="row">
+
+        <?php if (count($productos) == 0): ?>
+
+            <p class="text-center text-muted">No hay productos todavía.</p>
+
+        <?php else: ?>
+
+            <?php foreach ($productos as $p): ?>
+                <div class="col-md-3 mb-4">
+                    <div class="card product-card shadow-sm border-0">
+
+                        <img src="public/images/productos/<?php echo $p['imagen']; ?>" 
+                             class="card-img-top" 
+                             alt="<?php echo htmlspecialchars($p['nombre_producto']); ?>">
+
+                        <div class="card-body text-center">
+                            <h5 class="card-title fw-bold">
+                                <?php echo htmlspecialchars($p['nombre_producto']); ?>
+                            </h5>
+
+                            <p class="card-text text-success fw-semibold">
+                                $<?php echo number_format($p['precio'], 2); ?>
+                            </p>
+
+                            <button class="btn btn-primary btn-sm">
+                                <i class="bi bi-cart-plus"></i> Agregar
+                            </button>
+                        </div>
+
+                    </div>
                 </div>
+            <?php endforeach; ?>
 
-                <!-- COLUMNA 2 -->
-                <div class="col-md-6 mb-3 text-md-end">
-                    <h5 class="fw-bold">Síguenos</h5>
-                    <a href="#" class="footer-social"><i class="bi bi-facebook"></i></a>
-                    <a href="#" class="footer-social"><i class="bi bi-instagram"></i></a>
-                    <a href="#" class="footer-social"><i class="bi bi-whatsapp"></i></a>
-                </div>
+        <?php endif; ?>
+    </div>
+</div>
 
-            </div>
-
-            <hr class="footer-divider">
-
-            <div class="text-center small py-4">
-                © 2025 DigitalForge — Todos los derechos reservados.
-            </div>
-        </div>
-    </foot
+<?php 
+require_once 'includes/footer.php'; 
+?>
